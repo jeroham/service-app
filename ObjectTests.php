@@ -7,6 +7,19 @@
             
             //Tests for data and classes
             
+			$detail = new TicketdetailData();
+			$list = $detail->Search();
+			if(isset($detail)){
+				echo "ok detail";
+			}
+			if(isset($list)){
+				echo "ok list";
+			}
+			
+			$w =  $list->fetch();
+			echo  "Row: $w";
+			exit();
+			
             $employee1 = new EmployeeData();
             $employee1->first_name = "Keila";
             $employee1->last_name = "Mafufa";
@@ -36,6 +49,8 @@ $query = "SELECT * FROM employee";// WHERE id='$managerID' AND username='$manage
 
 $results = $employee1->Query($query);
 echo "<br />Results: ".$results->rowCount();
+
+
 
           //  } else {
           //     echo "<br>Failure";

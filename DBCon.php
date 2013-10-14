@@ -106,8 +106,8 @@ class DBCon extends PDO {
         $class .= '$result=parent::Save();'."\n";
         $class .= '$this->' . $tablename . 'id = $this->_id;' . "\n";
         $class .= 'return $result;'."\n";
-        $class .= "}\n";
-        
+        $class .= "}\n\n\n";
+		
         $class .= "}//end of class";
         file_put_contents($filename, $class);
         

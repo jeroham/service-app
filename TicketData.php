@@ -2,7 +2,7 @@
 class TicketData extends TicketDataBase {
 
 private $employee;
-public $details = array();
+public $details;
 
 public function AddDetail($detail){
 	$this->details[] = $detail;
@@ -18,9 +18,11 @@ public function CheckExisting($id){
 }
 
 public function GetDetails(){
-	if(!isset($details)){  //only load if null or changed
-		$details = new array();
-		$list = (new TicketdetailData())->Search("*","ticketid=".$this->ticketid);
+		if( $this->ticketid > 0 & !isset($this->details))) {  //only load if null or changed
+		$detail = new TicketdetailData();
+		
+		
+		$list = $detail->Search("*","ticketid=".$this->ticketid);
 		while($d = $list->fetch()){
 			$newdetail = new TicketdetailData();
 			$newdetail->ticketdetailid = $d["ticketdetailid"]; 
@@ -31,12 +33,16 @@ public function GetDetails(){
 			$newdetail->description = $d["description"];
 			$newdetail->status = $d["status"];
 			
-			$details[] = $newdetail; 
+			$this->details[] = $newdetail; 
 		}
 		
 	}
+	if(!isset($this->details)){	
+		$this->details = array();
+	}
 	
-	return $details;
+	
+	return $this->details;
 }
 
 public function GetEmployee(){

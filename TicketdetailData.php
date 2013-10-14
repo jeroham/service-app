@@ -8,7 +8,7 @@ class TicketdetailData extends TicketdetailDataBase {
 	
 public function GetEquipment(){
 	if(!isset($equipment)){  //only load if null or changed
-		$equipment = new EquipmenteData();
+		$equipment = new EquipmentData();
 		$equipment->Get($this->equipmentid);
 	} 
 	if($this->equipmentid != $equipment->equipmentid) { //only load if null or changed
@@ -18,15 +18,15 @@ public function GetEquipment(){
 }
 
 	
-public function GetEquipment(){
-	if(!isset($equipment)){  //only load if null or changed
-		$equipment = new EquipmenteData();
-		$equipment->Get($this->equipmentid);
+public function GetService(){
+	if(!isset($service)){  //only load if null or changed
+		$service = new ServiceData();
+		$service->Get($this->serviceid);
 	} 
-	if($this->equipmentid != $equipment->equipmentid) { //only load if null or changed
-		$equipment->Get($this->equipmentid);
+	if($this->serviceid != $service->serviceid) { //only load if null or changed
+		$service->Get($this->serviceid);
 	}
-	return $equipment;
+	return $service;
 }
 
 

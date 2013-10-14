@@ -29,7 +29,7 @@ if (false){
 }
 //get action if any
 if(isset($_GET['action'])){
-        $action = $_GET['action'];
+        $action = $_GET['action'];	
 } else{
         $action = 'view';
 }
@@ -146,12 +146,12 @@ if (isset($_POST['ticketid']) &
 				  </thead>
 				  <tbody>
 				  <?php
-					//$list = $ticket1->GetDetailList();
-					if(isset($list)){//->getCount() == 0){
+					$list = $ticket1->GetDetails();
+					if($list->length == 0){
 						
 										  echo '<tr class="table-detail-row"><td colspan="4">No details. <input type="button" value="Add"></td> '; 
 					} else {
-						while($c = $list->fetch()){ 
+						while($c = $list){ 
                                           echo '<tr class="table-detail-row"><td><input type="button" id="'.$row["ticketdetailid"].'" value="Edit"><input type="button" value="Delete"></td>'; 
 										  echo '<td>'.$row["employeename"].'</td>'; 
 										  echo '<td>'.$row["servicename"].'</td>'; 

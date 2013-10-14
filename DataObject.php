@@ -168,10 +168,11 @@ class DataObject extends stdClass {
         return $this->_db_con->Query($sql);
     }
 
-    function Search($columns="*",$filters="WHERE 1=1") {
+    function Search($columns="*",$filters="1=1") {
         // search on db
         $sql = "SELECT " . $columns . " FROM " . $this->_tablename;
-        $sql .= " ".$filters;
+        $sql .= " WHERE ".$filters;
+		echo "<br/>$sql<br/>";
 		return $this->_db_con->Query($sql);
     }
 
