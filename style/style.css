@@ -1,0 +1,49 @@
+body,td,th {
+	font-family:Tahoma, Geneva, sans-serif, cursive;
+	font-size: 16px;
+	color: #000;
+	line-height:1.5em;
+}
+a:link {
+	color: #06F;
+	text-decoration: none;
+}
+a:visited {
+	color: #06F;
+	text-decoration: none;
+}
+a:hover {
+	color: #0CF;
+	text-decoration: none;
+}
+a:active {
+	color: #60F;
+	text-decoration: none;
+}
+body {
+	background-color:#CCC ;
+	text-align: center;
+}
+a {
+	font-size: 14px;
+}
+
+#Page_Header { 
+	border:#999 px1 solid;
+	border-bottom:none;
+	background-color:#FFF;
+	width:95%;
+	    }
+
+#Page_Content {
+	border:#999 px1 solid;
+	border-bottom:none;
+	background-color:#FFF;
+	width:95%;
+		}
+
+#Page_Foote {
+	border:#999 px1 solid;
+	border-bottom:none;
+	background-color:#f4f4f4;
+	width:95%

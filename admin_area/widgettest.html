@@ -1,0 +1,24 @@
+<html>
+<head>
+<title>test</title>
+<script type="text/javascript" language="javascript" src="../js/widgets.js">
+
+</script>
+<script>
+
+function loadwidgets(){
+document.getElementById('widgets').innerHTML = 
+	new CalendarItem('one').render();
+document.getElementById('widgets').innerHTML += 
+	new CalendarItem('two','4/1/13').render();
+document.getElementById('widgets').innerHTML += 
+	new CalendarItem().render();
+
+}
+
+</script>
+</head>
+<body onload="loadwidgets()">
+<div id="widgets"></div>
+</body>
+</html>
