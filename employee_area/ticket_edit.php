@@ -86,6 +86,12 @@ if (isset($_POST['ticketid']) &
 
   <title>Ticket Edit</title>
   <link rel="stylesheet" href="../style/style.css" type="text/css" media="screen" />
+ 
+  <script language="javascript">
+	
+		
+	
+  </script>
 </head>
 
 <body>
@@ -147,17 +153,28 @@ if (isset($_POST['ticketid']) &
 				  <tbody>
 				  <?php
 					$list = $ticket1->GetDetails();
-					if($list->length == 0){
-						
-										  echo '<tr class="table-detail-row"><td colspan="4">No details. <input type="button" value="Add"></td> '; 
-					} else {
-						while($c = $list){ 
-                                          echo '<tr class="table-detail-row"><td><input type="button" id="'.$row["ticketdetailid"].'" value="Edit"><input type="button" value="Delete"></td>'; 
-										  echo '<td>'.$row["employeename"].'</td>'; 
-										  echo '<td>'.$row["servicename"].'</td>'; 
-										  echo '<td>'.$row["equipmentname"].'</td>'; 
-										  echo '<tr class="table-detail-row"><td colspan="4">Description: '.$row["description"].'</td> '; 
-                                  }
+					
+					if(sizeof($list) == 0 ){
+												  echo '<tr class="table-detail-row"><td><input type="button" value="Add"></td>'; 
+												  echo '<td><select name="detail_employee" />';
+												   $employees = new EmployeeData();
+												   $list = $employees->Search('employeeid,first_name,last_name',"1=1");
+												   while($e = $list->fetch()){
+														echo '<option value="'.$e["employeeid"].'">'.$e["first_name"]." ".$e["last_name"]. "</option>";
+												  }
+												  echo "</select>";
+												  
+												  echo '<td><input type="text" name="detail_service" /></td>'; 
+												  echo '<td><input type="text" name="detail_equipment" /></td>'; 
+												  echo '<tr class="table-detail-row"><td colspan="4">Description: <input type="text" name="detail_description" /></td> '; 
+							} else {
+								foreach($list as $d){
+												  echo '<tr class="table-detail-row"><td><input type="button" id="'.$d->ticketdetailid.'" value="Edit"><input type="button" value="Delete"></td>'; 
+												  echo '<td>'.$d->GetEmployee()->employeename.'</td>'; 
+												  echo '<td>'.$d->GetService()->servicename.'</td>'; 
+												  echo '<td>'.$d->GetEquipment()->equipment.'</td>'; 
+												  echo '<tr class="table-detail-row"><td colspan="4">Description: '.$d->description.'</td> '; 
+										  }
 					}
 				  
 				  ?>
@@ -177,8 +194,7 @@ if (isset($_POST['ticketid']) &
 	<?php 
 		include_once("../footer.php");
 		//cleanup and save state
-		$_SESSION['ticket'] = serialize($ticket1);
-		
+		//$_SESSION['ticket'] = serialize($ticket1);
 		?>
   </div>
 </body>

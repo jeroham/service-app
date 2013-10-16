@@ -18,7 +18,7 @@ public function CheckExisting($id){
 }
 
 public function GetDetails(){
-		if( $this->ticketid > 0 & !isset($this->details))) {  //only load if null or changed
+		if( $this->ticketid > 0 & !isset($this->details)) {  //only load if null or changed
 		$detail = new TicketdetailData();
 		
 		
