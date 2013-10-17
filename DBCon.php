@@ -26,6 +26,7 @@ class DBCon extends PDO {
               $pass = "";
              */
             $this->dbh = new PDO('mysql:host=127.0.0.1;dbname=owc', $this->user, $this->pass);
+			$this->dbh->
         } catch (PDOException $e) {
             print "Error!: " . $e->getMessage() . "<br/>";
             // die();

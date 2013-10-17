@@ -19,28 +19,27 @@ public function CheckExisting($id){
 
 public function GetDetails(){
 		if( $this->ticketid > 0 & !isset($this->details)) {  //only load if null or changed
-		$detail = new TicketdetailData();
-		
-		
-		$list = $detail->Search("*","ticketid=".$this->ticketid);
-		while($d = $list->fetch()){
-			$newdetail = new TicketdetailData();
-			$newdetail->ticketdetailid = $d["ticketdetailid"]; 
-			$newdetail->ticketid = $d["ticketid"];
-			$newdetail->equipmentid = $d["equipmentid"];
-			$newdetail->serviceid = $d["serviceid"];
-			$newdetail->employeeid = $d["employeeid"];
-			$newdetail->description = $d["description"];
-			$newdetail->status = $d["status"];
+			$detail = new TicketdetailData();
 			
-			$this->details[] = $newdetail; 
+			
+			$list = $detail->Search("*","ticketid=".$this->ticketid);
+			while($d = $list->fetch()){
+				$newdetail = new TicketdetailData();
+				$newdetail->ticketdetailid = $d["ticketdetailid"]; 
+				$newdetail->ticketid = $d["ticketid"];
+				$newdetail->equipmentid = $d["equipmentid"];
+				$newdetail->serviceid = $d["serviceid"];
+				$newdetail->employeeid = $d["employeeid"];
+				$newdetail->description = $d["description"];
+				$newdetail->status = $d["status"];
+				
+				$this->details[] = $newdetail; 
 		}
 		
 	}
 	if(!isset($this->details)){	
 		$this->details = array();
 	}
-	
 	
 	return $this->details;
 }

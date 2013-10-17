@@ -34,9 +34,41 @@ if(isset($_GET['action'])){
         $action = 'view';
 }
 
+
+/*
+if (!isset($ticket1) )
+{	echo "Ticket is not set";
+	$ticket1 = new TicketData();
+}
+else 
+	echo "Ticket is set";
+	
+if (sizeof($_POST)==0)
+{	echo "Post is not set";
+	
+}
+else 
+	echo "Post is set";	
+	*/
+//testing object persistence
 $ticket1 = new TicketData();
 if(isset($_SESSION['ticket'])){
-	$ticket1 = deserialize($_SESSION['ticket']);
+	$ticket1 = unserialize($_SESSION['ticket']);
+	$list = $ticket1->GetDetails();
+	echo "restored, details: ". sizeof($list);
+}
+
+if($action == "adddetail"){
+	$detail = new TicketdetailData();
+	 $detail->ticketid = $ticket1->ticketid;
+	$detail->equipmentid = ($_POST['detail_equipmentid']);
+	$detail->employeeid = ($_POST['detail_employeeid']);
+	$detail->serviceid = ($_POST['detail_serviceid']);
+	$detail->description = ($_POST['detail_description']);
+	$ticket1->Adddetail($detail);
+	$list = $ticket1->GetDetails();
+	echo "saved, details: ". sizeof($list);
+
 }
 
 // Gather this tickets's full information for inserting automatically into the edit form below on page
@@ -54,6 +86,7 @@ if (isset($_POST['ticketid']) &
         if($ticketid != 0){
             $ticket1->Get($ticketid);//load
         }
+		/*
     $ticket1->first_name = ($_POST['Ticket_first_name']);
         $ticket1->last_name = ($_POST['Ticket_last_name']);
         $ticket1->username = ($_POST['username']);
@@ -65,8 +98,8 @@ if (isset($_POST['ticketid']) &
         $ticket1->address2 = ($_POST['address2']);
         $ticket1->zip = ($_POST['zip']);
         $ticket1->state = ($_POST['state']);
-        
-        $result = $ticket1->Save();
+        */
+      //  $result = $ticket1->Save();
         if($result>0){
             //$sql = mysql_query("UPDATE customere SET company_name='$company_name', Ticket_first_name='$ticket_first_name', Ticket_last_name='$ticket_last_name', username='$username', password='$password' , phone='$phone', cell_phone='$cell_phone', email='$email', address1='$address1', address2='$address2', zip='$zip', state='$state'  WHERE id='$cid'");
             header("location: Ticket_list.php"); 
@@ -146,6 +179,7 @@ if (isset($_POST['ticketid']) &
 				Details:
 
                 <div class="detail" style="display:block;border:thin solid navy;width:100%">
+				<form method="POST" action="#?action=adddetail">
                   <table id="tdetail" name="tdetail" class="table-detail" border="1" style="width:100%">
 				  <thead>
 				  <tr class="table-detail-header"><th>Actions</th><th>Employee</th><th>Service</th><th>Equipment</th></tr>
@@ -155,8 +189,8 @@ if (isset($_POST['ticketid']) &
 					$list = $ticket1->GetDetails();
 					
 					if(sizeof($list) == 0 ){
-												  echo '<tr class="table-detail-row"><td><input type="button" value="Add"></td>'; 
-												  echo '<td><select name="detail_employee" />';
+												  echo '<tr class="table-detail-row"><td><input type="submit" value="Add"></td>'; 
+												  echo '<td><select name="detail_employeeid" />';
 												   $employees = new EmployeeData();
 												   $list = $employees->Search('employeeid,first_name,last_name',"1=1");
 												   while($e = $list->fetch()){
@@ -164,8 +198,8 @@ if (isset($_POST['ticketid']) &
 												  }
 												  echo "</select>";
 												  
-												  echo '<td><input type="text" name="detail_service" /></td>'; 
-												  echo '<td><input type="text" name="detail_equipment" /></td>'; 
+												  echo '<td><input type="text" name="detail_serviceid" /></td>'; 
+												  echo '<td><input type="text" name="detail_equipmentid" /></td>'; 
 												  echo '<tr class="table-detail-row"><td colspan="4">Description: <input type="text" name="detail_description" /></td> '; 
 							} else {
 								foreach($list as $d){
@@ -180,6 +214,7 @@ if (isset($_POST['ticketid']) &
 				  ?>
 				  </tbody>
 				  </table>
+				  </form>
                 </div><br />
                 <br />
                 <input name="ticketid" type="hidden" value="<?php echo $ticket1->ticketid; ?>" /> <input type="submit" name=
@@ -194,7 +229,7 @@ if (isset($_POST['ticketid']) &
 	<?php 
 		include_once("../footer.php");
 		//cleanup and save state
-		//$_SESSION['ticket'] = serialize($ticket1);
+	$_SESSION['ticket'] = serialize($ticket1);
 		?>
   </div>
 </body>

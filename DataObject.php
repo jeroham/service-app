@@ -184,5 +184,23 @@ class DataObject extends stdClass {
     function Log($info){
         
     }
+	
+	public function __sleep()
+{
+    $this->_db_con = null;
+	return array(
+	"_tablename",
+    "_idcolumnname",
+    "_id",
+    "_db_con" );
+	
+}
+
+public function __wakeup()
+{
+    $this->_db_con = new DBCon();
+}
+
+
 }
 ?>
