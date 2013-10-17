@@ -1,8 +1,8 @@
 <?php
 class TicketData extends TicketDataBase {
 
-private $employee;
-public $details;
+private $_employee;
+public $_details;
 
 public function AddDetail($detail){
 	$this->details[] = $detail;
@@ -44,15 +44,26 @@ public function GetDetails(){
 	return $this->details;
 }
 
+
+public function GetDetail($index){
+		
+	if(!isset($this->details)){	
+		$this->details = array();
+		return null; //or new detail
+	}
+	
+	return $this->details[$index];
+}
+
 public function GetEmployee(){
 	if(!isset($employee)){  //only load if null or changed
-		$employee = new EmployeeData();
-		$employee->Get($this->employeeid);
+		$_employee = new EmployeeData();
+		$_employee->Get($this->employeeid);
 	} 
-	if($this->employeeid != $employee->employeeid) { //only load if null or changed
-		$employee->Get($this->employeeid);
+	if($this->employeeid != $_employee->employeeid) { //only load if null or changed
+		$_employee->Get($this->employeeid);
 	}
-	return $employee;
+	return $_employee;
 }
 
 

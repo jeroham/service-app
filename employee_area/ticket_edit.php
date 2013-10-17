@@ -28,8 +28,8 @@ if (false){
 	}
 }
 //get action if any
-if(isset($_GET['action'])){
-        $action = $_GET['action'];	
+if(isset($_POST['action'])){
+        $action = $_POST['action'];	
 } else{
         $action = 'view';
 }
@@ -58,18 +58,6 @@ if(isset($_SESSION['ticket'])){
 	echo "restored, details: ". sizeof($list);
 }
 
-if($action == "adddetail"){
-	$detail = new TicketdetailData();
-	 $detail->ticketid = $ticket1->ticketid;
-	$detail->equipmentid = ($_POST['detail_equipmentid']);
-	$detail->employeeid = ($_POST['detail_employeeid']);
-	$detail->serviceid = ($_POST['detail_serviceid']);
-	$detail->description = ($_POST['detail_description']);
-	$ticket1->Adddetail($detail);
-	$list = $ticket1->GetDetails();
-	echo "saved, details: ". sizeof($list);
-
-}
 
 // Gather this tickets's full information for inserting automatically into the edit form below on page
 if (isset($_GET['ticketid']) & ($action == 'view' | $action == 'edit')) {
@@ -78,6 +66,13 @@ if (isset($_GET['ticketid']) & ($action == 'view' | $action == 'edit')) {
         $ticket1->Get($targetID);
    
 } 
+//get values from UI
+if(isset($_POST['description'])) $ticket1->description = $_POST['description'];
+if(isset($_POST['employeeid'])) $ticket1->employeeid = ($_POST['employeeid']);
+if(isset($_POST['customerid'])) $ticket1->customerid = ($_POST['customerid']);
+if(isset($_POST['status'])) $ticket1->status = ($_POST['status']);
+if(isset($_POST['ticketid'])) $ticket1->ticketid = ($_POST['ticketid']);
+		
 // Parse the form data and add Ticket to the system
 if (isset($_POST['ticketid']) &
         $action == "save") {
@@ -86,20 +81,8 @@ if (isset($_POST['ticketid']) &
         if($ticketid != 0){
             $ticket1->Get($ticketid);//load
         }
-		/*
-    $ticket1->first_name = ($_POST['Ticket_first_name']);
-        $ticket1->last_name = ($_POST['Ticket_last_name']);
-        $ticket1->username = ($_POST['username']);
-        $ticket1->password = ($_POST['password']);
-        $ticket1->phone = ($_POST['phone']);
-        $ticket1->cell_phone = ($_POST['cell_phone']);
-        $ticket1->email = ($_POST['email']);
-        $ticket1->address1 = ($_POST['address1']);
-        $ticket1->address2 = ($_POST['address2']);
-        $ticket1->zip = ($_POST['zip']);
-        $ticket1->state = ($_POST['state']);
-        */
-      //  $result = $ticket1->Save();
+		
+       $result = $ticket1->Save();
         if($result>0){
             //$sql = mysql_query("UPDATE customere SET company_name='$company_name', Ticket_first_name='$ticket_first_name', Ticket_last_name='$ticket_last_name', username='$username', password='$password' , phone='$phone', cell_phone='$cell_phone', email='$email', address1='$address1', address2='$address2', zip='$zip', state='$state'  WHERE id='$cid'");
             header("location: Ticket_list.php"); 
@@ -122,7 +105,9 @@ if (isset($_POST['ticketid']) &
  
   <script language="javascript">
 	
-		
+		function DetailPopUp(index){
+			var win = window.open('ticket_detail.php?detailindex='+index);
+		}
 	
   </script>
 </head>
@@ -146,7 +131,7 @@ if (isset($_POST['ticketid']) &
             <div align="left" style="margin: 25px;">
               <h2>Edit Ticket</h2>
 
-              <form action="ticket_edit.php?action=save" enctype="multipart/form-data" name="add_new_Ticket_form" id=
+              <form action="#" enctype="multipart/form-data" name="add_new_Ticket_form" id=
               "add_new_Ticket_form" method="post">
                 Customer:<br />
                 <select name="customerid" id="customerid">
@@ -156,14 +141,29 @@ if (isset($_POST['ticketid']) &
                                   $list = $customer1->Search();
                                   
                                   while($c = $list->fetch()){ 
-                                          echo '<option value="'. $c["customerid"].'">'. $c["company_name"].' ['. $c["contact_first_name"] . ' ' .  $c["contact_last_name"].']</option>'; 
+                                          echo '<option value="'. $c["customerid"].'" ';
+										  if($ticket1->customerid  == $c["customerid"]){
+												echo "SELECTED";
+											}
+										  echo '>'. $c["company_name"].' ['. $c["contact_first_name"] . ' ' .  $c["contact_last_name"].']</option>'; 
                                   }
                           ?>
                 </select><input type="button" onclick="window.open(&#39;../admin_area/client_edit.php?action=new&#39;,&#39;&#39;)"
                 value="Add Customer" /><br />
                 Employee:<br />
-                <input name="employeename" type="text" id="employeename" size="70" value=
-                "<?php echo $ticket1->employeeid ?>" /><br />
+				<select name="employeeid" />
+				<?php 
+							$employees = new EmployeeData();
+						   $list = $employees->Search('employeeid,first_name,last_name',"1=1");
+						   while($e = $list->fetch()){
+								echo '<option value="'.$e["employeeid"].'" ';
+								if	($ticket1->employeeid == $e["employeeid"] ){ 
+									echo "SELECTED";
+								}
+								echo '>'.$e["first_name"].' '.$e["last_name"]. '</option>';
+						  }
+						  echo "</select><br/>";
+				 ?>
                 Description:<br />
                 <input name="description" type="text" id="description" size="70" value=
                 "<?php echo $ticket1->description ?>" /><br />
@@ -179,8 +179,7 @@ if (isset($_POST['ticketid']) &
 				Details:
 
                 <div class="detail" style="display:block;border:thin solid navy;width:100%">
-				<form method="POST" action="#?action=adddetail">
-                  <table id="tdetail" name="tdetail" class="table-detail" border="1" style="width:100%">
+			      <table id="tdetail" name="tdetail" class="table-detail" border="1" style="width:100%">
 				  <thead>
 				  <tr class="table-detail-header"><th>Actions</th><th>Employee</th><th>Service</th><th>Equipment</th></tr>
 				  </thead>
@@ -189,7 +188,7 @@ if (isset($_POST['ticketid']) &
 					$list = $ticket1->GetDetails();
 					
 					if(sizeof($list) == 0 ){
-												  echo '<tr class="table-detail-row"><td><input type="submit" value="Add"></td>'; 
+												  echo '<tr class="table-detail-row"><td><input type="button" value="Add" onclick="DetailPopUp(0)"></td>'; 
 												  echo '<td><select name="detail_employeeid" />';
 												   $employees = new EmployeeData();
 												   $list = $employees->Search('employeeid,first_name,last_name',"1=1");
@@ -214,11 +213,13 @@ if (isset($_POST['ticketid']) &
 				  ?>
 				  </tbody>
 				  </table>
-				  </form>
-                </div><br />
+			    </div><br />
                 <br />
-                <input name="ticketid" type="hidden" value="<?php echo $ticket1->ticketid; ?>" /> <input type="submit" name=
-                "button" id="button" value="Save" /> <input type="button" onclick="confirm('Delete this Ticket?')" name=
+                <input name="action" type="hidden" value="save" />
+				<input name="ticketid" type="hidden" value="<?php echo $ticket1->ticketid; ?>" />
+				<input type="submit" name="button" id="button" value="Save" /> 
+				
+				<input type="button" onclick="confirm('Delete this Ticket?')" name=
                 "btnDelete" id="button" class="delete_button" value="Delete" />
               </form>
             </div>

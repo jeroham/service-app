@@ -172,7 +172,7 @@ class DataObject extends stdClass {
         // search on db
         $sql = "SELECT " . $columns . " FROM " . $this->_tablename;
         $sql .= " WHERE ".$filters;
-		echo "<br/>$sql<br/>";
+		//echo "<br/>$sql<br/>";
 		return $this->_db_con->Query($sql);
     }
 
