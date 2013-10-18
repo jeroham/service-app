@@ -23,7 +23,7 @@ if (false){
     $employee1->password = $password;
     
     if (false){//!$employee1->CheckLogin(true)) {
-		echo "Your login session data is not on record <a href= http://localhost:8888/Joel/ >Click Here</a>.";
+		echo "Your login session data is not on record <a href='../'>Click Here</a>.";
 		 exit();	 
 	}
 }
@@ -53,9 +53,10 @@ else
 //testing object persistence
 $ticket1 = new TicketData();
 if(isset($_SESSION['ticket'])){
-	$ticket1 = unserialize($_SESSION['ticket']);
+	$ticket1 = new TicketData(json_decode($_SESSION['ticket']));
+	echo "restored, details: ". $_SESSION['ticket'];
 	$list = $ticket1->GetDetails();
-	echo "restored, details: ". sizeof($list);
+	
 }
 
 
@@ -85,7 +86,7 @@ if (isset($_POST['ticketid']) &
        $result = $ticket1->Save();
         if($result>0){
             //$sql = mysql_query("UPDATE customere SET company_name='$company_name', Ticket_first_name='$ticket_first_name', Ticket_last_name='$ticket_last_name', username='$username', password='$password' , phone='$phone', cell_phone='$cell_phone', email='$email', address1='$address1', address2='$address2', zip='$zip', state='$state'  WHERE id='$cid'");
-            header("location: Ticket_list.php"); 
+            header("location: employee_index.php"); 
            // exit();
         }else{
             echo "Error: ".$result;
@@ -102,11 +103,27 @@ if (isset($_POST['ticketid']) &
 
   <title>Ticket Edit</title>
   <link rel="stylesheet" href="../style/style.css" type="text/css" media="screen" />
- 
-  <script language="javascript">
+ <script language="javascript" src="../js/jquery.js"></script>
 	
+  <script language="javascript">
+		var win;
+		var details=[];
+		<?php
+		//load details here
+		
+		?>
 		function DetailPopUp(index){
-			var win = window.open('ticket_detail.php?detailindex='+index);
+			win = window.open('ticket_detail.php?detailindex='+index);
+			win.ddone = showMe;
+			
+		}
+		
+		function addDetail(){
+			
+			$(win.document).find('#detail_description').val();
+			win.close();
+			win = null;
+			//alert('');
 		}
 	
   </script>
@@ -217,10 +234,13 @@ if (isset($_POST['ticketid']) &
                 <br />
                 <input name="action" type="hidden" value="save" />
 				<input name="ticketid" type="hidden" value="<?php echo $ticket1->ticketid; ?>" />
-				<input type="submit" name="button" id="button" value="Save" /> 
+				<input type="submit" name="button1" id="button" value="Save" /> 
+				
 				
 				<input type="button" onclick="confirm('Delete this Ticket?')" name=
-                "btnDelete" id="button" class="delete_button" value="Delete" />
+                "btnDelete" id="button2" class="delete_button" value="Delete" />
+				<input type="button" onclick="showMe()" name=
+                "btnDelete" id="button3" class="delete_button" value="Show" />
               </form>
             </div>
           </td>
@@ -230,7 +250,7 @@ if (isset($_POST['ticketid']) &
 	<?php 
 		include_once("../footer.php");
 		//cleanup and save state
-	$_SESSION['ticket'] = serialize($ticket1);
+	$_SESSION['ticket'] = json_encode($ticket1);
 		?>
   </div>
 </body>

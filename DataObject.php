@@ -20,17 +20,22 @@ class DataObject extends stdClass {
     private $_db_con;
     
     
-    function __construct() {
-        //  try {
+    function __construct($json=false) {
         $this->_db_con = new DBCon();
-        //$dbh = new PDO('mysql:host=127.0.0.1;dbname=hangover', $user, $pass);
-
-        /* } catch (PDOException $e) {
-          print "Error!: " . $e->getMessage() . "<br/>";
-          die();
-          } */
+			 if ($json) $this->set(json_decode($json, true));
+			 
+		
     }
-    
+     public function set($data) {
+        foreach ($data AS $key => $value) {
+            if (is_array($value)) {
+                $sub = new JSONObject;
+                $sub->set($value);
+                $value = $sub;
+            }
+            $this->{$key} = $value;
+        }
+    }
     /*/*save event registering
     protected $_savedCallbacks = array();
 
@@ -59,13 +64,15 @@ class DataObject extends stdClass {
             $sql = "INSERT INTO `" . $this->_tablename . "` ";
             foreach ($this as $property => $value) {
                 //exclude meta properties
-                if ($property != "_db_con" &
-                        $property != "_tablename" &
-                        $property != "_idcolumnname" &
-                         $property != "_id" &
+                if (
+				substr ($property,0,1) != "_" &
+					//$property != "_db_con" &
+                    //    $property != "_tablename" &
+                     //   $property != "_idcolumnname" &
+                     //    $property != "_id" &
                         $property != $this->_idcolumnname) {
                     $columns .= "`" . $property . '`,';
-
+				
                     //validate types
                   //  print "Type: " . gettype($value);
                     switch (gettype($value)) {
@@ -81,6 +88,10 @@ class DataObject extends stdClass {
                         case "NULL":
                             $placeholders .= "null,";
                             break;
+						case "array":  //TODO: check
+                            $placeholders .= "null,";
+                            break;
+							
                         default:
                             $placeholders .= "'" . $value . "',";
                             break;
@@ -92,7 +103,8 @@ class DataObject extends stdClass {
             $columns = substr($columns, 0, strlen($columns) - 1);
             $placeholders = substr($placeholders, 0, strlen($placeholders) - 1);
             $sql .= "($columns) values ($placeholders);";
-            // Performing SQL query
+        //    echo "<br>$sql<br>";
+			// Performing SQL query
              $this->_id  = $this->_db_con->Execute($sql,true);
             //return new id
             return  $this->_id;
@@ -103,10 +115,11 @@ class DataObject extends stdClass {
 
             foreach ($this as $property => $value) {
                 //exclude meta properties
-                if ($property != "_db_con" &
+                if (	substr ($property,0,1) != "_"  &
+						/*$property != "_db_con" &
                         $property != "_tablename" &
                         $property != "_idcolumnname" &
-                        $property != "_id" &
+                        $property != "_id" &*/
                         $property != $this->_idcolumnname) {
                     if ($this->_idcolumnname === $property) {
                         $id = $value;
