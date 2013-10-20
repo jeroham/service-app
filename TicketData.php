@@ -2,7 +2,7 @@
 class TicketData extends TicketDataBase {
 
 private $_employee;
-private $_details;
+public $_details;
 
 public function AddDetail($detail){
 

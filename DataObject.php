@@ -186,7 +186,8 @@ class DataObject extends stdClass {
         $sql = "SELECT " . $columns . " FROM " . $this->_tablename;
         $sql .= " WHERE ".$filters;
 		//echo "<br/>$sql<br/>";
-		return $this->_db_con->Query($sql);
+        $results = $this->_db_con->Query($sql);
+        return $results == null ? new PDOStatement(): $results;
     }
 
     //pass thru query

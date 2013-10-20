@@ -1,5 +1,9 @@
 <?php
 class EquipmentData extends EquipmentDataBase {
+    
+public function GetDescription(){
+    return $this->brand+" "+$this->model;
+}    
 //validate data,
 public function Validate($id){
 }

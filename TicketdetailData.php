@@ -1,44 +1,44 @@
 <?php
 class TicketdetailData extends TicketdetailDataBase {
 
-	private $equipment;
-	private $service;
-	private $employee;
+	private $_equipment;
+	private $_service;
+	private $_employee;
 	
 	
 public function GetEquipment(){
-	if(!isset($equipment)){  //only load if null or changed
-		$equipment = new EquipmentData();
-		$equipment->Get($this->equipmentid);
+	if(!isset($this->equipment)){  //only load if null or changed
+		$this->equipment = new EquipmentData();
+		$this->equipment->Get($this->equipmentid);
 	} 
-	if($this->equipmentid != $equipment->equipmentid) { //only load if null or changed
-		$equipment->Get($this->equipmentid);
+	if($this->equipmentid != $this->_equipment->equipmentid) { //only load if null or changed
+		$this->_equipment->Get($this->equipmentid);
 	}
-	return $equipment;
+	return $this->_equipment;
 }
 
 	
 public function GetService(){
-	if(!isset($service)){  //only load if null or changed
-		$service = new ServiceData();
-		$service->Get($this->serviceid);
+	if(!isset($this->_service)){  //only load if null or changed
+		$this->_service = new ServiceData();
+		$this->_service->Get($this->serviceid);
 	} 
-	if($this->serviceid != $service->serviceid) { //only load if null or changed
-		$service->Get($this->serviceid);
+	if($this->serviceid != $this->_service->serviceid) { //only load if null or changed
+		$this->_service->Get($this->serviceid);
 	}
-	return $service;
+	return $this->_service;
 }
 
 
 public function GetEmployee(){
-	if(!isset($employee)){  //only load if null or changed
-		$employee = new EmployeeData();
-		$employee->Get($this->employeeid);
+	if(!isset($this->_employee)){  //only load if null or changed
+		$this->_employee = new EmployeeData();
+		$this->_employee->Get($this->employeeid);
 	} 
-	if($this->employeeid != $employee->employeeid) { //only load if null or changed
-		$employee->Get($this->employeeid);
+	if($this->employeeid != $this->_employee->employeeid) { //only load if null or changed
+		$this->_employee->Get($this->employeeid);
 	}
-	return $employee;
+	return $this->_employee;
 }
 
 //validate data,

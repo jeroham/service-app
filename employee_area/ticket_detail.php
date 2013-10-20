@@ -63,8 +63,8 @@ $detail = new TicketdetailData();
 
 if(isset($_GET['detailindex'])){
 	$detailindex = $_GET['detailindex'];
-	if($detailindex > 0 ){
-		$detail = $ticket1->GetDetail($detailindex);
+	if($detailindex > -1 ){
+		 
 	} else{  //new detail
 		$ticket1->AddDetail($detail);
 	}
@@ -101,7 +101,12 @@ if($action == "save"){
  
   <script language="javascript">
 		var ddone;
-			
+<?php
+if($action == "save"){
+    echo "window.close();parent.refresh();";
+    
+}
+?>			
 	
 	
   </script>
@@ -124,7 +129,7 @@ if($action == "save"){
                   
 				  <?php
 					
-						  echo '<h4>Employee</h4><select name="detail_employeeid" />';
+						  echo '<h4>Employee</h4><select id="detail_employeeid" />';
 						   $employees = new EmployeeData();
 						   $list = $employees->Search('employeeid,first_name,last_name',"1=1");
 						   while($e = $list->fetch()){
@@ -132,9 +137,9 @@ if($action == "save"){
 						  }
 						  echo "</select>";
 						  
-						  echo '<h4>Service</h4><input type="text" name="detail_serviceid" value="'.$detail->serviceid.'" />'; 
-						  echo '<h4>Equipment</h4><input type="text" name="detail_equipmentid"  value="'.$detail->equipmentid.'" />'; 
-						  echo '<h4>Description</h4><input type="text" name="detail_description" id="detail_description"  value="'.$detail->description.'" />'; 
+						  echo '<h4>Service</h4><input type="text" id="detail_serviceid" value="'.$detail->serviceid.'" />'; 
+						  echo '<h4>Equipment</h4><input type="text" id="detail_equipmentid"  value="'.$detail->equipmentid.'" />'; 
+						  echo '<h4>Description</h4><input type="text" id="detail_description" id="detail_description"  value="'.$detail->description.'" />'; 
 
 				  
 				  ?>
@@ -142,8 +147,8 @@ if($action == "save"){
                 </div><br />
                 <br />
                 <input name="action" type="hidden" value="save" />
-				<input name="ticketid" type="hidden" value="<?php echo $ticket1->ticketid; ?>" />
-				<input name="ticketdetailid" type="hidden" value="<?php echo $detail->ticketdetailid; ?>" />
+				<input id="ticketid" type="hidden" value="<?php echo $ticket1->ticketid; ?>" />
+				<input id="detail_index" type="hidden" value="<?php echo $detail->ticketdetailid; ?>" />
 				<input type="submit" name=
                 "button" id="button" value="Save" /> 
 				<input type="button" onclick="confirm('Delete this Ticket Detail?')" name=
